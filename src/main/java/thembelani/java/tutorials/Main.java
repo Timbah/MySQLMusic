@@ -1,9 +1,10 @@
 package thembelani.java.tutorials;
 
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+
 import javax.swing.*;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -21,7 +22,14 @@ public class Main {
 
         final char[] password = (okCxl == JOptionPane.OK_OPTION) ? pf.getPassword() : null;
 
-        try (Connection connection = DriverManager.getConnection(CONN_STRING, username, String.copyValueOf(password))) {
+        var dataSource = new MysqlDataSource();
+//        dataSource.setUrl(CONN_STRING);
+        dataSource.setServerName("localhost");
+        dataSource.setPort(3306);
+        dataSource.setDatabaseName("music");
+
+//        try (Connection connection = DriverManager.getConnection(CONN_STRING, username, String.copyValueOf(password))) {
+        try (Connection connection = dataSource.getConnection(username, String.copyValueOf(password))) {
             System.out.println("Success!! Connection made to the music database");
             Arrays.fill(password, ' '); //Clearing the password to keep it in memory for as short at possible
         } catch (SQLException e) {
